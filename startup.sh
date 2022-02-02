@@ -125,6 +125,7 @@ esac
 
 # selection for disk type
 diskpart () {
+
 # show disks present on system
 lsblk -n --output TYPE,KNAME,SIZE | awk '$1=="disk"{print NR,"/dev/"$2" - "$3}' # show disks with /dev/ prefix and size
 echo -ne "
@@ -134,13 +135,38 @@ echo -ne "
     after formating your disk there is no way to get data back      
 ------------------------------------------------------------------------
 
-Please enter full path to disk: (example /dev/sda):
+Please enter full path to root partition: (example /dev/sda):
 "
 read option
 echo "DISK=$option" >> setup.conf
 
+# show disks present on system
+lsblk -n --output TYPE,KNAME,SIZE | awk '{print NR,"/dev/"$2" - "$3}' # show disks with /dev/ prefix and size
+echo -ne "
+------------------------------------------------------------------------
+    THIS WILL FORMAT AND DELETE ALL DATA ON THE DISK             
+    Please make sure you know what you are doing because         
+    after formating your disk there is no way to get data back      
+------------------------------------------------------------------------
+
+Please enter full path to root partition: (example /dev/sda):
+"
+read option
+echo "ROOT=$option" >> setup.conf
+
+echo -ne "
+------------------------------------------------------------------------
+    THIS WILL FORMAT AND DELETE ALL DATA ON THE DISK             
+    Please make sure you know what you are doing because         
+    after formating your disk there is no way to get data back      
+------------------------------------------------------------------------
+
+Please enter full path to EFI partition: (example /dev/sda):
+"
+read option
+echo "EFI=$option" >> setup.conf
+
 drivessd
-set_option DISK $option
 }
 userinfo () {
 read -p "Please enter your username: " username
